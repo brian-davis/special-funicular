@@ -94,10 +94,12 @@ FriendlyId.defaults do |config|
     end
 
     private def unset_slug_if_invalid
-      if errors.key?(friendly_id_config.base) && # e.g. :test on Post
-        attribute_changed?(friendly_id_config.slug_column.to_s) # i.e. :slug on :frienly_id_slugs
+      if (
+        errors.key?(friendly_id_config.base) ||
+        errors.key?(friendly_id_config.slug_column)
+      ) && attribute_changed?(friendly_id_config.slug_column)
 
-        original_slug = changes[friendly_id_config.slug_column.to_s]&.first
+        original_slug = changes[friendly_id_config.slug_column]&.first
         send "#{friendly_id_config.slug_column}=", original_slug
       end
     end
